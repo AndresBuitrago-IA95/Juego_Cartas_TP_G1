@@ -68,9 +68,9 @@ public class FrmJuego extends JFrame {
 
     private void verificar() {
         if (tpJugadores.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, jugador1.getGrupos());
+            JOptionPane.showMessageDialog(null, jugador1.getResumen());
         } else {
-            JOptionPane.showMessageDialog(null, jugador2.getGrupos());
+            JOptionPane.showMessageDialog(null, jugador2.getResumen());
         }
     }
 

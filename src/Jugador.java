@@ -28,21 +28,71 @@ public class Jugador {
         pnl.repaint();
     }
 
-    public String getGrupos() {
+    public String getResumen() {
         int[] contadores = new int[NombreCarta.values().length];
-
-        for (Carta carta : cartas) {
-            contadores[carta.getNombre().ordinal()]++;
+        for (int i = 0; i < cartas.length; i++) {
+            contadores[cartas[i].getNombre().ordinal()]++;
         }
 
-        String resultado = "";
+        // Grupos por nombre (sin importar pinta)
+        String grupos = "";
         for (int i = 0; i < contadores.length; i++) {
             if (contadores[i] >= 2) {
-                resultado += Grupo.values()[contadores[i]] + " de " + NombreCarta.values()[i] + "\n";
-
+                grupos += Grupo.values()[contadores[i]] + " de " + NombreCarta.values()[i] + "\n";
             }
         }
 
-        return resultado.isEmpty() ? "No se encontraron grupos" : "Se encontraron los siguientes grupos:\n" + resultado;
+        // Escaleras por pinta
+        boolean[][] tiene = new boolean[Pinta.values().length][NombreCarta.values().length];
+        for (int i = 0; i < cartas.length; i++) {
+            tiene[cartas[i].getPinta().ordinal()][cartas[i].getNombre().ordinal()] = true;
+        }
+
+        // Marcar qué cartas están en escalera
+        boolean[][] enEscalera = new boolean[Pinta.values().length][NombreCarta.values().length];
+        String escaleras = "";
+        for (int p = 0; p < Pinta.values().length; p++) {
+            int inicio = -1;
+            int longitud = 0;
+            for (int n = 0; n < NombreCarta.values().length; n++) {
+                if (tiene[p][n]) {
+                    if (longitud == 0) inicio = n;
+                    longitud++;
+                } else {
+                    if (longitud >= 2) {
+                        escaleras += Grupo.values()[longitud] + " de " + Pinta.values()[p]
+                                + " de " + NombreCarta.values()[inicio]
+                                + " a " + NombreCarta.values()[inicio + longitud - 1] + "\n";
+                        for (int k = inicio; k < inicio + longitud; k++) enEscalera[p][k] = true;
+                    }
+                    longitud = 0;
+                }
+            }
+            if (longitud >= 2) {
+                escaleras += Grupo.values()[longitud] + " de " + Pinta.values()[p]
+                        + " de " + NombreCarta.values()[inicio]
+                        + " a " + NombreCarta.values()[inicio + longitud - 1] + "\n";
+                for (int k = inicio; k < inicio + longitud; k++) enEscalera[p][k] = true;
+            }
+        }
+
+        
+        int puntaje = 0;
+        for (int i = 0; i < cartas.length; i++) {
+            int nombre = cartas[i].getNombre().ordinal();
+            int pinta = cartas[i].getPinta().ordinal();
+            boolean enGrupo = contadores[nombre] >= 2;
+            boolean enEsc = enEscalera[pinta][nombre];
+            if (!enGrupo && !enEsc) {
+                puntaje += cartas[i].getNombre().getValor();
+            }
+        }
+
+        String resultado = "";
+        if (!grupos.isEmpty()) resultado += grupos + "\n";
+        if (!escaleras.isEmpty()) resultado += escaleras + "\n";
+        resultado += "\nPuntos:\n" + puntaje;
+        return resultado;
     }
+
 }
