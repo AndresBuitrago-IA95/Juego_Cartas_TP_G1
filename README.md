@@ -22,6 +22,7 @@ The `JAVA PROJECTS` view allows you to manage your dependencies. More details ca
 Examen #1
 Integrantes:
 Andres Ferney Buitrago Suarez
+Nicolas Legarda Arismendy
 
 4.1 Obtener los grupos en escalera de la misma pinta, es decir, secuencias de cartas que
 tengan la misma pinta. Por ejemplo: 10, J, Q y K de Pica conforman una cuarta de pica.
